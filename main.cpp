@@ -1,32 +1,38 @@
 #include <iostream>
+#include <fstream>
+#include <vector>
+
 using namespace std;
-
 int main(int argc, char* argv[]) {
-    cout << "start of program" << endl;
-    if(argc > 2 || argc == 1){
-        cout << "Usage: " << argv[0] << " <PATH TO FILE>";
+    /*if(argc < 2){
+        cout << "Usage: " << argv[0] << "<PathToFile>";
         return 1;
-    }
+    }*/
+    string commands = "cd /home/$USER/Documents; mkdir -p repoes; cd repoes" ;
+
+    ifstream file;
+    //file.open(argv[1], "r");
+    file.open("/home/dellboy/Documents/dashboard/links.txt");
+    string links[50];
+    int i = 0;
+    //links.reserve(10);
+    if (file.is_open()) {
 
 
-    char buffer[50];
-    string links[20];
-    FILE *repositories;
-    repositories = fopen (argv[1],"r");
-    if (repositories!= nullptr)
-    {
-        int i = 0;
-        while(!feof(repositories) ){
-            fgets(buffer,sizeof(buffer), repositories);
-
-            cout << buffer;
-            links[i] = buffer;
+        for (string line; getline(file,line);){
+            links[i] = line;
+            //cout << links[i]<< endl;
             i++;
         }
-        fclose (repositories);
+
+        //cout << i << endl;
     }
-    cout << "end of program"<<endl;
+
+    for (int j = 0; j < i; ++j) {
+        commands += "; git clone " + links[j];
+    }
+    //cout << commands;
+    system(commands.c_str());
+
     return 0;
-
 }
-
